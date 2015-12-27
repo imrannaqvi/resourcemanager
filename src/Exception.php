@@ -1,0 +1,15 @@
+<?php
+namespace imrannaqvi\ResourceManager;
+
+class Exception extends \Exception
+{
+	const PARAMETERS_MODULE_NOT_DEFINED = 1;
+	const PARAMETERS_CONTROLLER_NOT_DEFINED = 2;
+	const PARAMETERS_ACTION_NOT_DEFINED = 3;
+	
+	const CONFIG_MODULE_NOT_DEFINED = 11;
+	const CONFIG_CONTROLLER_NOT_DEFINED = 12;
+	const CONFIG_ACTION_NOT_DEFINED = 13;
+	
+	const CONFIG_RESOURCE_NOT_DEFINED = 21;
+}
