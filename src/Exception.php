@@ -12,4 +12,6 @@ class Exception extends \Exception
 	const CONFIG_ACTION_NOT_DEFINED = 13;
 	
 	const CONFIG_RESOURCE_NOT_DEFINED = 21;
+	
+	const CIRCULAR_DEPENDENCY = 99;
 }

@@ -5,6 +5,7 @@ class ResourceManager
 {
 	protected $config;
 	protected $basePath = '';
+	protected $dependencyCache = array();
 
 	public function __construct($config = array())
 	{
@@ -108,6 +109,7 @@ class ResourceManager
 			) {
 				throw new Exception('Specified Resource "' . $list[$i] . '" Not Found.', Exception::CONFIG_RESOURCE_NOT_DEFINED);
 			}
+			$this->dependencyCache = array();
 			$out = array_merge($out, $this->getItemDependencyRecursive($list[$i]));
 		}
 		//remove duplicates and fix numeric indexes
@@ -120,6 +122,7 @@ class ResourceManager
 			if(! array_key_exists($out[$i], $this->config['resources'])) {
 				throw new Exception('Resources with name "'.$out[$i].'" not found.');
 			}
+			$name = $out[$i];
 			$item = $this->config['resources'][$out[$i]];
 			$type = null;
 			$url = null;
@@ -193,6 +196,7 @@ class ResourceManager
 					$priority = $index++;
 				}
 				$resources[] = array(
+					'name' => $name,
 					'type' => $type,
 					'url' => $url,
 					'basePath' => $basePath,
@@ -208,6 +212,10 @@ class ResourceManager
 	
 	public function getItemDependencyRecursive($name)
 	{
+		if(in_array($name, $this->dependencyCache)) {
+			throw new Exception('Circular Dependency detected for ' .  implode(', ', $this->dependencyCache) . ', ' . $name . '.', Exception::CIRCULAR_DEPENDENCY);
+		}
+		$this->dependencyCache[] = $name;
 		//if any dependencies found
 		if(
 			array_key_exists($name, $this->config['resources']) && 
