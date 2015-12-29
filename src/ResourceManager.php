@@ -6,35 +6,26 @@ class ResourceManager
 	protected $config;
 	protected $basePath = '';
 	protected $dependencyCache = array();
+	protected $handlers = array();
 
 	public function __construct($config = array())
 	{
 		$this->config = $config;
+		$this->updateHandler('css', function($resource){});
+		$this->updateHandler('js', function($resource){});
 	}
 	
-	public function handle($controller, $params, $options = array())
+	public function handle($params)
 	{
 		$resources = $this->getResolvedResourcesList($params);
 		for($i=0; $i<count($resources); $i++) {
-			switch($resources[$i]['type']) {
-				case 'css':
-					$stylesheet = $resources[$i]['stylesheet'];
-					$controller->getServiceLocator()->get('viewhelpermanager')->get('headLink')->appendStylesheet(
-						$resources[$i]['url'],
-						$stylesheet['media'],
-						$stylesheet['conditionalStylesheet'],
-						$stylesheet['extras']
-					);
-				break;
-				case 'js':
-					$controller->getServiceLocator()->get('viewhelpermanager')->get('inlineScript')->appendFile(
-						$resources[$i]['url'],
-						'text/javascript',
-						$resources[$i]['attrs']
-					);
-				break;
-			}
+			$this->handlers[$resources[$i]['type']]($resources[$i]);
 		}
+	}
+	
+	public function updateHandler($type, callable $handler)
+	{
+		$this->handlers[$type] = $handler;
 	}
 	
 	public function getResolvedResourcesList($params)
