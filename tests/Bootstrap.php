@@ -9,5 +9,5 @@ $loader->add("ResourceManagerTests\\", __DIR__);
 
 $loader->register();
 
-ServiceManagerGrabber::setServiceConfig(require_once './application.config.php');
+//ServiceManagerGrabber::setServiceConfig(require_once './application.config.php');
 ob_start();

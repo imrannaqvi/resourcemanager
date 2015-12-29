@@ -6,8 +6,6 @@ use PHPUnit_Framework_TestCase;
 
 class ResourceTests extends PHPUnit_Framework_TestCase
 {
-	protected $serviceManager;
-	
 	public $config = array(
 		'mapping' => array(
 			'modules' => array(
@@ -34,8 +32,6 @@ class ResourceTests extends PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		$serviceManagerGrabber = new ServiceManagerGrabber();
-		$this->serviceManager = $serviceManagerGrabber->getServiceManager();
 		$this->rm = new ResourceManager\ResourceManager($this->config);
 	}
 	

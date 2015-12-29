@@ -6,12 +6,8 @@ use PHPUnit_Framework_TestCase;
 
 class MissingParameterTests extends PHPUnit_Framework_TestCase
 {
-	protected $serviceManager;
-
 	public function setUp()
 	{
-		$serviceManagerGrabber = new ServiceManagerGrabber();
-		$this->serviceManager = $serviceManagerGrabber->getServiceManager();
 		$this->rm = new ResourceManager\ResourceManager();
 	}
 	

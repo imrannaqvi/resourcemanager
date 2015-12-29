@@ -6,8 +6,6 @@ use PHPUnit_Framework_TestCase;
 
 class WrongParameterTests extends PHPUnit_Framework_TestCase
 {
-	protected $serviceManager;
-	
 	public $config = array(
 		'mapping' => array(
 			'modules' => array(
@@ -26,8 +24,6 @@ class WrongParameterTests extends PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		$serviceManagerGrabber = new ServiceManagerGrabber();
-		$this->serviceManager = $serviceManagerGrabber->getServiceManager();
 		$this->rm = new ResourceManager\ResourceManager($this->config);
 	}
 	
