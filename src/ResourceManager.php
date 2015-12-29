@@ -16,19 +16,11 @@ class ResourceManager
 	{
 		$resources = $this->getResolvedResourcesList($params);
 		for($i=0; $i<count($resources); $i++) {
-			//basePath
-			$basePath = '';
-			if(
-				array_key_exists('basePath', $resources[$i]) &&
-				$resources[$i]['basePath']
-			) {
-				$basePath = $this->getBasePath();
-			}
 			switch($resources[$i]['type']) {
 				case 'css':
 					$stylesheet = $resources[$i]['stylesheet'];
 					$controller->getServiceLocator()->get('viewhelpermanager')->get('headLink')->appendStylesheet(
-						$basePath . $resources[$i]['url'],
+						$resources[$i]['url'],
 						$stylesheet['media'],
 						$stylesheet['conditionalStylesheet'],
 						$stylesheet['extras']
@@ -36,7 +28,7 @@ class ResourceManager
 				break;
 				case 'js':
 					$controller->getServiceLocator()->get('viewhelpermanager')->get('inlineScript')->appendFile(
-						$basePath . $resources[$i]['url'],
+						$resources[$i]['url'],
 						'text/javascript',
 						$resources[$i]['attrs']
 					);
@@ -140,11 +132,14 @@ class ResourceManager
 				if( array_key_exists('type', $item)) {
 					$type = $item['type'];
 				}
-				if( array_key_exists('url', $item)) {
-					$url = $item['url'];
-				}
 				if( array_key_exists('basePath',  $item)) {
 					$basePath = true;
+				}
+				if( array_key_exists('url', $item)) {
+					$url = $item['url'];
+					if($basePath) {
+						$url = $this->getBasePath() . $url;
+					}
 				}
 				//if cdn, disable base path and overwrite url
 				if( array_key_exists('cdn',  $item)) {
@@ -199,7 +194,6 @@ class ResourceManager
 					'name' => $name,
 					'type' => $type,
 					'url' => $url,
-					'basePath' => $basePath,
 					'attrs' => $attrs,
 					'priority' => $priority,
 					'stylesheet' => $stylesheet,
