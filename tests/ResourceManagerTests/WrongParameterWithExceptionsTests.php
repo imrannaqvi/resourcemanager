@@ -4,7 +4,7 @@ namespace ResourceManagerTests;
 use imrannaqvi\ResourceManager;
 use PHPUnit_Framework_TestCase;
 
-class WrongParameterTests extends PHPUnit_Framework_TestCase
+class WrongParameterWithExceptionsTests extends PHPUnit_Framework_TestCase
 {
 	public $config = array(
 		'mapping' => array(
@@ -25,6 +25,7 @@ class WrongParameterTests extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->rm = new ResourceManager\ResourceManager($this->config);
+		$this->rm->raiseMappingExceptions(true);
 	}
 	
 	/**

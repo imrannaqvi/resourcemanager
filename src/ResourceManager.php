@@ -7,6 +7,7 @@ class ResourceManager
 	protected $basePath = '';
 	protected $dependencyCache = array();
 	protected $handlers = array();
+	protected $raiseMappingExceptions = false;
 
 	public function __construct($config = array())
 	{
@@ -52,7 +53,10 @@ class ResourceManager
 				! array_key_exists('modules', $this->config['mapping']) ||
 				! array_key_exists($params['module'], $this->config['mapping']['modules'])
 			) {
-				throw new Exception('Module "' . $params['module'] . '" not defined in configuration.', Exception::CONFIG_MODULE_NOT_DEFINED);
+				if($this->raiseMappingExceptions) {
+					throw new Exception('Module "' . $params['module'] . '" not defined in configuration.', Exception::CONFIG_MODULE_NOT_DEFINED);
+				}
+				return array();
 			}
 			//module
 			$module = $this->config['mapping']['modules'][$params['module']];
@@ -65,7 +69,10 @@ class ResourceManager
 				! array_key_exists('controllers', $module) ||
 				! array_key_exists($params['controller'], $module['controllers']) 
 			) {
-				throw new Exception('Controller "' . $params['controller'] . '" not defined in configuration.', Exception::CONFIG_CONTROLLER_NOT_DEFINED);
+				if($this->raiseMappingExceptions) {
+					throw new Exception('Controller "' . $params['controller'] . '" not defined in configuration.', Exception::CONFIG_CONTROLLER_NOT_DEFINED);
+				}
+				return array();
 			}
 			//controller
 			$controller = $module['controllers'][$params['controller']];
@@ -78,7 +85,10 @@ class ResourceManager
 				! array_key_exists('actions', $controller) ||
 				! array_key_exists($params['action'], $controller['actions'])
 			) {
-				throw new Exception('Action "' . $params['action'] . '" not defined in configuration.', Exception::CONFIG_ACTION_NOT_DEFINED);
+				if($this->raiseMappingExceptions) {
+					throw new Exception('Action "' . $params['action'] . '" not defined in configuration.', Exception::CONFIG_ACTION_NOT_DEFINED);
+				}
+				return array();
 			}
 			$action = $controller['actions'][$params['action']];
 			$list = array_merge($list, $action);
@@ -248,5 +258,10 @@ class ResourceManager
 			return $a['priority'] > $b['priority'];
 		});
 		return $resources;
+	}
+	
+	public function raiseMappingExceptions($flag)
+	{
+		$this->raiseMappingExceptions = $flag;
 	}
 }
